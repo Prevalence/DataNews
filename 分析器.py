@@ -6,8 +6,8 @@ Created on Sun Jul 23 21:17:49 2017
 """
 
 import jieba.analyse
-f=open('江泽民讲话.txt','r')
+f=open('习近平讲话.txt','r')
 passage=f.read()
 tfidf = jieba.analyse.extract_tags
-keywords = tfidf(passage,topK=30)
+keywords = tfidf(passage,topK=50)
 print(keywords)

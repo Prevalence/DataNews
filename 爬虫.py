@@ -9,12 +9,13 @@ import re
 #江泽民文选第一卷的地址为http://cpc.people.com.cn/GB/64184/64185/180137/10818669.html到http://cpc.people.com.cn/GB/64184/64185/180137/10818749.html
 #第二卷的地址为"http://cpc.people.com.cn/GB/64184/64185/180138/10818623.html"到http://cpc.people.com.cn/GB/64184/64185/180138/10821826.html
 def getXiPassage():
-    parenturl='http://china.newssc.org/system/topic/2335/index_zyjh.shtml'
+    parenturl='http://china.newssc.org/system/topic/2335/index_zyjh_1.shtml'
     parentcontent = urllib.request.urlopen(parenturl,timeout=3).read()
     urls=re.findall( r"(?<=href=\").+?(?=\")|(?<=href=\').+?(?=\')", parentcontent.decode('gb2312','ignore'),re.I|re.S|re.M)
     f=open('习近平讲话.txt','a')
     for i in urls:
         if 'china.newssc' in i and not('topic' in i):
+            print('-----------------doing '+i+'----------------')
             data=urllib.request.urlopen(i,timeout=3).read()
             passage=data.decode('gb2312','ignore')
             passage=re.findall(r'<p( style="TEXT-INDENT: 2em")?>(.*?)</p>',passage,re.I|re.S|re.M)
@@ -23,7 +24,6 @@ def getXiPassage():
                     j=j[1]
                 j=j.replace('<strong>',"")
                 j=j.replace('</strong>',"")
-                print(j)
                 for k in j:
                     try:
                         f.write(k)
