@@ -22,12 +22,18 @@ def getWordPiece(name):
 
 #获得关键词并在分词版文件中统计词频
 def getKeywords(name,number):
+    stop=['习近平','总书记','指出','更加','重要讲话','着力','作出','强调','广大','各位','不断','不断','文选','这是','一些','特别','不能','这个','就是','人民出版社','这个','一个','没有','就是','他们','不能','可以','这样','一些','但是','这是','不是','自己','如果','一点','有些','什么','能够','关于','当然','特别','不要','这次','对于','比较','所以','可能']
     f=open(name,'r')
     passage=f.read()
     tfidf = jieba.analyse.extract_tags
     keywords = tfidf(passage,topK=number)
+    for i in stop:
+        if i in keywords:
+            keywords.remove(i)
     f.close
-    f=open(name.split('.txt')[0]+'分词版.txt','r')
+    path=name.split('.txt')[0]+'分词版.txt'
+    path=path.replace('Corpus','Data2Analyse')
+    f=open(path,'r')
     content=f.read()
     content=content.split('/')
     dict={}
@@ -43,8 +49,7 @@ def getKeywords(name,number):
     f.close()
     for i in keywords:
         frequency.append(dict[i]/wholeSize)
-    print(keywords)
-    print(frequency)
+    print(len(keywords))
 #将关键词和频率存入excel
     workbook = xlwt.Workbook(encoding='utf-8')
     sheet = workbook.add_sheet('book_top250',cell_overwrite_ok=True)
@@ -55,10 +60,11 @@ def getKeywords(name,number):
         sheet.write(i+1,0,keywords[i])
         sheet.write(i+1,1,frequency[i])
         sheet.write(i+1,2,frequency[i]*10)
-    workbook.save(name.split('.txt')[0]+'.xls')
+    path=path.replace('分词版','')
+    workbook.save(path.split('.txt')[0]+'.xls')
     
     
     
 if __name__=='__main__':
-    getWordPiece('Corpus/江泽民讲话.txt')
-    getKeywords('Corpus/江泽民讲话.txt',30)
+    #getWordPiece('Corpus/江泽民讲话.txt')
+    getKeywords('../Corpus/江泽民讲话.txt',100)
